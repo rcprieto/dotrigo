@@ -1,0 +1,344 @@
+<!-- Container principal que simula a tela de um celular -->
+<div class="font-sans antialiased bg-gray-100 flex justify-center items-start min-h-screen p-4">
+  <div class="w-full max-w-lg bg-white shadow-2xl rounded-2xl overflow-hidden" style="min-height: 80vh;">
+
+    <!-- Cabeçalho Fixo -->
+    <header class="sticky top-0 bg-white shadow-md z-10">
+      <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+        <!-- Logo -->
+        <h1 class="text-3xl font-bold text-yellow-900" style="font-family: 'Merriweather', serif;">
+          dotrigo
+        </h1>
+
+        <!-- Ícones de Navegação -->
+        <div class="flex items-center space-x-4">
+          <!-- Botão Pronta Entrega -->
+          <button (click)="navegarPara('prontaEntrega')"
+                  class="relative text-yellow-800 hover:text-yellow-600 transition-colors"
+                  title="Pronta Entrega">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.414-1.415L11 9.586V6z" clip-rule="evenodd" />
+            </svg>
+            <!-- Destaque se houver itens pronta entrega -->
+            @if (produtosProntaEntrega().length > 0) {
+            <span class="absolute top-0 right-0 block h-3 w-3 rounded-full bg-green-500 border-2 border-white"></span>
+            }
+          </button>
+
+          <!-- Botão Carrinho -->
+          <button (click)="navegarPara('carrinho')"
+                  class="relative text-yellow-800 hover:text-yellow-600 transition-colors"
+                  title="Carrinho">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            <!-- Contagem de itens -->
+            @if (totalItensCarrinho() > 0) {
+            <span class="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+              {{ totalItensCarrinho() }}
+            </span>
+            }
+          </button>
+        </div>
+      </div>
+
+      <!-- Navegação de Categorias (Apenas na página do menu) -->
+      @if (paginaAtual() === 'menu') {
+      <nav class="bg-yellow-50 overflow-x-auto">
+        <ul class="flex space-x-2 px-4 py-2">
+          <li><button (click)="filtrarCategoria('todos')" [class.active]="categoriaAtiva() === 'todos'" class="nav-button">Todos</button></li>
+          <li><button (click)="filtrarCategoria('paes')" [class.active]="categoriaAtiva() === 'paes'" class="nav-button">Pães</button></li>
+          <li><button (click)="filtrarCategoria('pizzas')" [class.active]="categoriaAtiva() === 'pizzas'" class="nav-button">Pizzas</button></li>
+          <li><button (click)="filtrarCategoria('focaccias')" [class.active]="categoriaAtiva() === 'focaccias'" class="nav-button">Focaccias</button></li>
+          <li><button (click)="filtrarCategoria('outros')" [class.active]="categoriaAtiva() === 'outros'" class="nav-button">Outros</button></li>
+        </ul>
+      </nav>
+      }
+    </header>
+
+    <!-- Conteúdo Principal (Muda conforme a página) -->
+    <main class="p-4">
+
+      <!-- PÁGINA: MENU (LISTA DE PRODUTOS) -->
+      @if (paginaAtual() === 'menu') {
+      <section class="space-y-4">
+        @for (produto of produtosFiltrados(); track produto.id; let i = $index) {
+        <!-- Card do Produto -->
+        <div class="flex bg-white rounded-lg shadow-md overflow-hidden transition-shadow hover:shadow-lg">
+          <!-- Imagem -->
+          <img [src]="produto.fotoUrl" [alt]="produto.nome"
+               class="w-28 h-28 object-cover flex-shrink-0"
+               onerror="this.src='https://placehold.co/112x112/f5e7c4/8c5a2b?text=dotrigo'">
+
+          <div class="p-3 flex flex-col justify-between w-full">
+            <div>
+              <h3 class="text-lg font-semibold text-yellow-900">{{ produto.nome }}</h3>
+              <p class="text-sm text-gray-600 truncate">{{ produto.descricao }}</p>
+
+              <!-- Detalhes do Produto -->
+              <div class="text-xs text-gray-500 mt-1 space-x-2">
+                <span><i class="fas fa-weight-hanging"></i> {{ produto.peso }}</span>
+                <span><i class="fas fa-box"></i> {{ produto.tamanho }}</span>
+                <span><i class="far fa-clock"></i> {{ produto.tempoPreparo }}</span>
+              </div>
+            </div>
+
+            <!-- Ação de Adicionar (Layout modificado) -->
+            <div class="mt-2">
+              <!-- Preço na primeira linha -->
+              <div>
+                <span class="text-lg font-bold text-green-700">{{ produto.preco | currency:'BRL' }}</span>
+              </div>
+
+              <!-- Controles na segunda linha, alinhados à direita -->
+              <div class="flex items-center space-x-2 mt-2 justify-end">
+                <!-- Input de Quantidade -->
+                <input #qtyInput type="number" value="1" min="1" max="10"
+                       class="w-14 text-center border rounded-md py-1 px-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                <!-- Botão Adicionar -->
+                <button (click)="adicionarAoCarrinho(produto, qtyInput.valueAsNumber)"
+                        class="bg-yellow-800 text-white rounded-md px-3 py-1 text-sm font-medium hover:bg-yellow-700 transition-colors">
+                  Adicionar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        } @empty {
+        <p class="text-center text-gray-500 mt-8">Nenhum produto encontrado nesta categoria.</p>
+        }
+      </section>
+      }
+
+      <!-- PÁGINA: PRONTA ENTREGA -->
+      @if (paginaAtual() === 'prontaEntrega') {
+      <section>
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-semibold text-yellow-900">Pronta Entrega</h2>
+          <button (click)="navegarPara('menu')" class="text-yellow-800 hover:underline">
+            &larr; Voltar ao Menu
+          </button>
+        </div>
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-800 p-3 rounded-md mb-4">
+          <p class="font-medium">Produtos fresquinhos, prontos para levar!</p>
+          <p class="text-sm">Adicione ao carrinho e retire imediatamente.</p>
+        </div>
+
+        <div class="space-y-4">
+          @for (produto of produtosProntaEntrega(); track produto.id) {
+          <!-- Card do Produto (similar ao do menu) -->
+          <div class="flex bg-white rounded-lg shadow-md overflow-hidden">
+            <img [src]="produto.fotoUrl" [alt]="produto.nome"
+                 class="w-28 h-28 object-cover flex-shrink-0"
+                 onerror="this.src='https://placehold.co/112x112/f5e7c4/8c5a2b?text=dotrigo'">
+
+            <div class="p-3 flex flex-col justify-between w-full">
+              <div>
+                <h3 class="text-lg font-semibold text-yellow-900">{{ produto.nome }}</h3>
+                <p class="text-sm text-gray-600 truncate">{{ produto.descricao }}</p>
+                <div class="text-xs text-gray-500 mt-1 space-x-2">
+                  <span><i class="fas fa-weight-hanging"></i> {{ produto.peso }}</span>
+                  <span><i class="fas fa-box"></i> {{ produto.tamanho }}</span>
+                </div>
+              </div>
+
+              <!-- Ação de Adicionar (Layout modificado) -->
+              <div class="mt-2">
+                <!-- Preço na primeira linha -->
+                <div>
+                  <span class="text-lg font-bold text-green-700">{{ produto.preco | currency:'BRL' }}</span>
+                </div>
+
+                <!-- Controles na segunda linha, alinhados à direita -->
+                <div class="flex items-center space-x-2 mt-2 justify-end">
+                  <input #qtyProntaInput type="number" value="1" min="1" max="10"
+                         class="w-14 text-center border rounded-md py-1 px-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                  <button (click)="adicionarAoCarrinho(produto, qtyProntaInput.valueAsNumber)"
+                          class="bg-yellow-800 text-white rounded-md px-3 py-1 text-sm font-medium hover:bg-yellow-700 transition-colors">
+                    Adicionar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          } @empty {
+          <p class="text-center text-gray-500 mt-8">Nenhum produto disponível para pronta entrega no momento.</p>
+          }
+        </div>
+      </section>
+      }
+
+      <!-- PÁGINA: CARRINHO -->
+      @if (paginaAtual() === 'carrinho') {
+      <section>
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-semibold text-yellow-900">Meu Carrinho</h2>
+          <button (click)="navegarPara('menu')" class="text-yellow-800 hover:underline">
+            &larr; Continuar comprando
+          </button>
+        </div>
+
+        @if (carrinho().length > 0) {
+        <div class="space-y-3">
+          <!-- Lista de Itens no Carrinho -->
+          @for (item of carrinho(); track item.id) {
+          <div class="flex items-center bg-gray-50 p-2 rounded-lg shadow-sm">
+            <img [src]="item.produto.fotoUrl" [alt]="item.produto.nome"
+                 class="w-16 h-16 object-cover rounded-md flex-shrink-0"
+                 onerror="this.src='https://placehold.co/64x64/f5e7c4/8c5a2b?text=dotrigo'">
+
+            <div class="ml-3 flex-grow">
+              <h4 class="font-medium text-yellow-900">{{ item.produto.nome }}</h4>
+              <span class="text-sm text-gray-600">{{ item.produto.preco | currency:'BRL' }} / un</span>
+            </div>
+
+            <!-- Controles de Quantidade -->
+            <div class="flex items-center space-x-2">
+              <button (click)="atualizarQuantidade(item.id, item.quantidade - 1)"
+                      class="w-7 h-7 bg-gray-200 rounded-full font-bold text-lg flex items-center justify-center text-gray-700 hover:bg-gray-300">-</button>
+              <span class="w-8 text-center font-medium">{{ item.quantidade }}</span>
+              <button (click)="atualizarQuantidade(item.id, item.quantidade + 1)"
+                      class="w-7 h-7 bg-gray-200 rounded-full font-bold text-lg flex items-center justify-center text-gray-700 hover:bg-gray-300">+</button>
+            </div>
+
+            <!-- Preço Total do Item -->
+            <div class="ml-3 text-right w-20">
+              <span class="font-bold text-gray-800">{{ (item.produto.preco * item.quantidade) | currency:'BRL' }}</span>
+            </div>
+
+            <!-- Botão Remover -->
+            <button (click)="removerDoCarrinho(item.id)" class="ml-2 text-red-500 hover:text-red-700" title="Remover">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+          }
+
+          <!-- Sumário do Pedido -->
+          <div class="border-t pt-4 mt-4">
+            <div class="flex justify-between items-center text-lg">
+              <span class="font-medium text-gray-700">Subtotal:</span>
+              <span class="font-bold text-yellow-900">{{ subtotalCarrinho() | currency:'BRL' }}</span>
+            </div>
+            <div class="flex justify-between items-center text-lg mt-2">
+              <span class="font-semibold text-gray-800">Total:</span>
+              <span class="font-bold text-2xl text-green-800">{{ totalCarrinho() | currency:'BRL' }}</span>
+            </div>
+          </div>
+
+          <!-- Botão Finalizar -->
+          <button (click)="navegarPara('checkout')"
+                  class="w-full bg-green-700 text-white font-bold py-3 px-4 rounded-lg text-lg hover:bg-green-600 transition-colors shadow-lg">
+            Finalizar Pedido
+          </button>
+
+        </div>
+        } @else {
+        <!-- Carrinho Vazio -->
+        <div class="text-center py-12">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-gray-300 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <p class="text-gray-500 mt-4 text-lg">Seu carrinho está vazio.</p>
+          <p class="text-gray-400">Adicione produtos do menu para começar.</p>
+        </div>
+        }
+      </section>
+      }
+
+      <!-- PÁGINA: CHECKOUT (FORMULÁRIO) -->
+      @if (paginaAtual() === 'checkout') {
+      <section>
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-semibold text-yellow-900">Checkout</h2>
+          <button (click)="navegarPara('carrinho')" class="text-yellow-800 hover:underline">
+            &larr; Voltar ao Carrinho
+          </button>
+        </div>
+
+        <!-- Feedback de Envio -->
+        @if (statusPedido() === 'enviando') {
+        <div class="bg-blue-100 border-blue-500 text-blue-800 p-3 rounded-md mb-4 text-center">
+          <p class="font-medium animate-pulse">Enviando seu pedido...</p>
+        </div>
+        }
+        @if (statusPedido() === 'erro') {
+        <div class="bg-red-100 border-red-500 text-red-800 p-3 rounded-md mb-4">
+          <p class="font-medium">Ops! Algo deu errado.</p>
+          <p class="text-sm">Tente novamente ou entre em contato conosco.</p>
+        </div>
+        }
+
+        <!-- Formulário -->
+        <form (submit)="finalizarPedido($event)" class="space-y-4">
+          <div>
+            <label for="nome" class="form-label">Seu Nome *</label>
+            <input type="text" id="nome" name="nome" [(ngModel)]="clienteNome"
+                   class="form-input" placeholder="Digite seu nome completo" required>
+          </div>
+
+          <div>
+            <label for="telefone" class="form-label">Seu Telefone (WhatsApp) *</label>
+            <input type="tel" id="telefone" name="telefone" [(ngModel)]="clienteTelefone"
+                   class="form-input" placeholder="(XX) XXXXX-XXXX" required>
+          </div>
+
+          <div>
+            <label for="comentarios" class="form-label">Comentários</label>
+            <textarea id="comentarios" name="comentarios" [(ngModel)]="clienteComentarios" rows="3"
+                      class="form-input" placeholder="Alguma observação? (ex: sem cebola, ponto da carne)"></textarea>
+          </div>
+
+          <!-- Resumo do Pedido -->
+          <div class="border-t pt-4 mt-4">
+            <h3 class="text-lg font-semibold text-yellow-900 mb-2">Resumo do Pedido</h3>
+            @for (item of carrinho(); track item.id) {
+            <div class="flex justify-between text-sm text-gray-700">
+              <span>{{ item.quantidade }}x {{ item.produto.nome }}</span>
+              <span>{{ (item.produto.preco * item.quantidade) | currency:'BRL' }}</span>
+            </div>
+            }
+            <div class="flex justify-between items-center text-xl font-bold mt-2 pt-2 border-t">
+              <span class="text-gray-800">Total:</span>
+              <span class="text-green-800">{{ totalCarrinho() | currency:'BRL' }}</span>
+            </div>
+          </div>
+
+          <!-- Botão de Envio -->
+          <button type="submit"
+                  [disabled]="statusPedido() === 'enviando'"
+                  class="w-full bg-green-700 text-white font-bold py-3 px-4 rounded-lg text-lg hover:bg-green-600 transition-colors shadow-lg disabled:bg-gray-400 disabled:cursor-not-allowed">
+            @if (statusPedido() === 'enviando') {
+            <span>Enviando...</span>
+            } @else {
+            <span>Confirmar Pedido</span>
+            }
+          </button>
+        </form>
+      </section>
+      }
+
+      <!-- PÁGINA: CONFIRMAÇÃO DO PEDIDO -->
+      @if (paginaAtual() === 'confirmacao') {
+      <section class="text-center py-16">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-green-500 mx-auto" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+        </svg>
+        <h2 class="text-3xl font-semibold text-yellow-900 mt-6 mb-2">Pedido Recebido!</h2>
+        <p class="text-gray-600 text-lg mb-8">
+          Obrigado, {{ ultimoPedido().clienteNome }}! <br> Seu pedido já está em preparação.
+        </p>
+        <p class="text-gray-500 mb-2">ID do Pedido:</p>
+        <p class="text-xl font-mono text-gray-800 mb-8">{{ ultimoPedido().id }}</p>
+
+        <button (click)="navegarPara('menu')"
+                class="w-full bg-yellow-800 text-white font-bold py-3 px-4 rounded-lg text-lg hover:bg-yellow-700 transition-colors">
+          Fazer Novo Pedido
+        </button>
+      </section>
+      }
+
+    </main>
+  </div>
+</div>

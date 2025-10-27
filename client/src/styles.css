@@ -1,0 +1,49 @@
+/* Estilos customizados (os mesmos do app Angular) */
+        .font-sans {
+          font-family: 'Inter', sans-serif;
+        }
+
+        /* Estilo customizado para os botões de navegação de categoria */
+        .nav-button {
+          padding: 0.5rem 1rem;
+          border-radius: 9999px; /* pill shape */
+          font-weight: 500;
+          color: #8c5a2b; /* text-yellow-800 */
+          background-color: #fefce8; /* bg-yellow-50 */
+          transition: all 0.2s ease-in-out;
+          white-space: nowrap;
+        }
+        .nav-button:hover {
+          background-color: #fde68a; /* bg-yellow-200 */
+        }
+        .nav-button.active {
+          background-color: #a16207; /* bg-yellow-800 */
+          color: white;
+          font-weight: 600;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Estilos para os inputs do formulário */
+        .form-label {
+          display: block;
+          margin-bottom: 0.5rem;
+          font-weight: 500;
+          color: #4b5563; /* text-gray-700 */
+        }
+        .form-input {
+          width: 100%;
+          padding: 0.75rem 1rem;
+          border: 1px solid #d1d5db; /* border-gray-300 */
+          border-radius: 0.5rem; /* rounded-lg */
+          transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-input:focus {
+          outline: none;
+          border-color: #a16207; /* border-yellow-800 */
+          box-shadow: 0 0 0 3px rgba(161, 98, 7, 0.2); /* ring-yellow-500 com opacidade */
+        }
+
+        /* Ícones simulados (como no Angular) */
+        .fa-weight-hanging::before { content: "⚖️"; margin-right: 2px; }
+        .fa-box::before { content: "📦"; margin-right: 2px; }
+        .fa-clock::before { content: "🕒"; margin-right: 2px; }

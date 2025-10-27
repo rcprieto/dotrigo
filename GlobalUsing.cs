@@ -1,0 +1,14 @@
+﻿global using API.Domain.Extension;
+global using AutoMapper;
+global using API.Domain.Interfaces;
+global using API.Domain.Interfaces.Repository;
+global using API.Domain.Entidades;
+global using System.Linq.Dynamic.Core;
+global using System.Linq;
+global using API.Domain.Interfaces.Services;
+global using System;
+global using System.Collections.Generic;
+global using System.Net.Http;
+global using API.Domain.Auxiliares;
+global using System.Threading.Tasks;
+global using API.Domain.Auxiliar;
