@@ -9,8 +9,6 @@ namespace API.Domain.Entidades
 	/// Representa um item do cardápio (catálogo de produtos).
 	/// </summary>
 	[Table("tb_produto", Schema = "ws_dotrigo")]
-	[Comment("Catálogo de produtos da padaria/pizzaria.")]
-	[Index(nameof(Categoria), nameof(Ativo), Name = "idx_categoria_ativo")]
 	public class Produto
 	{
 		/// <summary>
@@ -28,10 +26,11 @@ namespace API.Domain.Entidades
 		[StringLength(255)]
 		public string Nome { get; set; }
 
-		/// <summary>
-		/// Categoria principal do produto.
-		/// </summary>
-		[Required]
+
+		[Column("enum_cat_id")]
+		public int? CategoriaId { get; set; }
+
+		[ForeignKey("CategoriaId")]
 		public Enumerador Categoria { get; set; }
 
 		/// <summary>
@@ -90,6 +89,6 @@ namespace API.Domain.Entidades
 		public DateTime DataCadastro { get; set; } = new DateTime();
 
 		// Propriedade de navegação para os itens de pedido (relação 1-N)
-		public virtual ICollection<PedidoItem> PedidoItens { get; set; } = new List<PedidoItem>();
+		public ICollection<PedidoItem> PedidoItens { get; set; } = new List<PedidoItem>();
 	}
 }

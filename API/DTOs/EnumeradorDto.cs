@@ -14,7 +14,4 @@ public class EnumeradorDto : BaseDto
 
 	public int? Ordem { get; set; }
 
-
-	[NotMapped]
-	public int[] AreasId { get; set; }
 }

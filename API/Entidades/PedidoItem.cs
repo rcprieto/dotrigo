@@ -31,8 +31,7 @@ namespace API.Domain.Entidades
 		/// ID do produto comprado.
 		/// </summary>
 		[Required]
-		[StringLength(50)]
-		public string ProdutoId { get; set; } = string.Empty;
+		public int ProdutoId { get; set; }
 
 		/// <summary>
 		/// Quantidade comprada deste produto.
@@ -62,12 +61,12 @@ namespace API.Domain.Entidades
 		/// Navegação para o pedido "pai".
 		/// </summary>
 		[ForeignKey(nameof(PedidoId))]
-		public virtual Pedido Pedido { get; set; } = null!;
+		public Pedido Pedido { get; set; } = null!;
 
 		/// <summary>
 		/// Navegação para o produto de catálogo.
 		/// </summary>
 		[ForeignKey(nameof(ProdutoId))]
-		public virtual Produto Produto { get; set; } = null!;
+		public Produto Produto { get; set; } = null!;
 	}
 }

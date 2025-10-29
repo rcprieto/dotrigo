@@ -5,9 +5,12 @@ import {
   computed,
   WritableSignal,
   effect,
+  OnInit,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ProdutoService } from '../../_services/produto.service';
 
 // --- Interfaces de Dados ---
 // Define a estrutura de um produto
@@ -57,7 +60,17 @@ type StatusPedido = 'idle' | 'enviando' | 'sucesso' | 'erro';
   templateUrl: './produtos.html',
   styleUrl: './produtos.css',
 })
-export class Produtos {
+export class Produtos implements OnInit {
+  service = inject(ProdutoService);
+
+  ngOnInit(): void {
+    console.log('Produtos carregados da API:');
+    this.service.listarProdutos().subscribe({
+      next: (produtos) => {
+        console.log('Produtos carregados da API:', produtos);
+      },
+    });
+  }
   // --- Estado da Aplicação (Sinais) ---
 
   // Gerenciamento de Página

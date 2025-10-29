@@ -20,11 +20,6 @@ namespace API.Data.Context
                 .Property(p => p.Preco)
                 .HasPrecision(10, 2);
 
-            // Configura os ENUMs para serem salvos como strings (varchar) no banco
-            // Isso é crucial para corresponder ao ENUM do MySQL
-            modelBuilder.Entity<Produto>()
-                .Property(p => p.Categoria)
-                .HasConversion<string>();
 
             // Define valores padrão
             modelBuilder.Entity<Produto>()
@@ -111,6 +106,10 @@ namespace API.Data.Context
 
         public DbSet<Enumerador> Enumeradors { get; set; }
         public DbSet<Referencia> Referencias { get; set; }
+        public DbSet<Produto> Produtos { get; set; }
+        public DbSet<Pedido> Pedidos { get; set; }
+        public DbSet<PedidoItem> PedidoItens { get; set; }
+
 
 
 

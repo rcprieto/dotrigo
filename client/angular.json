@@ -13,6 +13,10 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+             "outputPath": {
+              "base": "../API/wwwroot",
+              "browser": ""
+            },
             "browser": "src/main.ts",
             "polyfills": [
               "zone.js"
@@ -26,7 +30,9 @@
               "src/manifest.webmanifest"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+               "src/lib/fontawesome/css/all.min.css",
+              "node_modules/ngx-toastr/toastr.css"
             ]
           },
           "configurations": {
@@ -34,27 +40,39 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "5MB",
+                  "maximumError": "10MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "10MB",
+                  "maximumError": "10MB"
                 }
               ],
               "outputHashing": "all",
               "serviceWorker": "ngsw-config.json"
             },
-            "development": {
+           "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true
+              "sourceMap": true,
+              "namedChunks": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/_environment/environment.ts",
+                  "with": "src/_environment/environment.development.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
         },
         "serve": {
+          "options": {
+          "ssl": true,
+          "sslCert": "ssl/localhost.pem",
+          "sslKey": "ssl/localhost-key.pem"
+          },
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {

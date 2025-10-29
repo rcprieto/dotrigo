@@ -11,12 +11,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 var connect = builder.Configuration.GetSection("ConnectionStrings");
-var appSettings = builder.Configuration.GetSection("AppSetting");
-
-
-
-// builder.Services.Configure<ConnStringsHelper>(connect);
-// builder.Services.AddSingleton(connect.Get<ConnStringsHelper>());
 
 builder.Services.Configure<ConnStringsHelper>(connect);
 builder.Services.AddSingleton(connect.Get<ConnStringsHelper>());
@@ -28,9 +22,6 @@ builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers().AddNewtonsoftJson();
 
-#region AWS S3
-
-#endregion
 
 
 builder.Services.Configure<RequestLocalizationOptions>(opts =>
@@ -41,9 +32,6 @@ builder.Services.Configure<RequestLocalizationOptions>(opts =>
     };
     var supportedUICultures = new[]
     {
-                    new CultureInfo("en"),
-                    new CultureInfo("es"),
-                    new CultureInfo("fr"),
                     new CultureInfo("pt-BR"),
                     new CultureInfo("pt")
                 };
@@ -107,18 +95,6 @@ app.UseEndpoints(endpoints =>
 });
 
 
-//using var scope = app.Services.CreateScope();
-//var services = scope.ServiceProvider;
-//try
-//{
 
-//}
-//catch (Exception ex)
-//{
-//    var logger = services.GetService<ILogger<Program>>();
-//    if (logger != null)
-//        logger.LogError(ex, "Erro durante o migration");
-
-//}
 
 app.Run();
