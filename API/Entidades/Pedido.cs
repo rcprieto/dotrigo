@@ -32,6 +32,9 @@ namespace API.Domain.Entidades
 		[StringLength(50)]
 		public string ClienteTelefone { get; set; } = string.Empty;
 
+		[Required]
+		[StringLength(550)]
+		public string ClienteEndereco { get; set; } = string.Empty;
 		/// <summary>
 		/// Observações adicionadas pelo cliente.
 		/// </summary>

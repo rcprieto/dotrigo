@@ -1,0 +1,14 @@
+.col{
+	font-size: 13px !important;
+}
+
+.btn, select, input{
+	font-size: 13px !important;
+}
+
+
+.principal{
+	overflow: auto;
+	padding: 10px;
+	height: calc(100vh - 150px);
+}

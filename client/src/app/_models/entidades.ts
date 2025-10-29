@@ -14,9 +14,10 @@ export interface Pedido {
   comentarios: string | null;
   valorTotal: number;
   statusId: number | null;
-  status: Enumerador;
+  status: Enumerador | null;
   dataPedido: string;
   itens: PedidoItem[];
+  clienteEndereco: string | null;
 }
 
 export interface PedidoItem {
@@ -26,7 +27,7 @@ export interface PedidoItem {
   quantidade: number;
   precoUnitario: number;
   nomeProduto: string;
-  pedido: Pedido;
+  pedido: Pedido | null;
   produto: Produto;
 }
 
@@ -34,7 +35,7 @@ export interface Produto {
   id: number;
   nome: string;
   categoriaId: number | null;
-  categoria: Enumerador;
+  categoria: Enumerador | null;
   fotoUrl: string | null;
   descricao: string | null;
   tamanho: string | null;
@@ -43,8 +44,9 @@ export interface Produto {
   tempoPreparo: string | null;
   prontaEntrega: boolean;
   ativo: boolean;
-  dataCadastro: string;
+  dataCadastro: string | null;
   pedidoItens: PedidoItem[];
+  estoque: number | null;
 }
 
 export interface Referencia {

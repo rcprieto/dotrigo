@@ -31,4 +31,11 @@ export class ProdutoService {
   buscarProdutoPorId(id: string): Observable<Produto> {
     return this.http.get<Produto>(`${this.baseUrl}/${id}`);
   }
+
+  cadastrar(model: Produto) {
+    return this.http.post<Produto>(this.baseUrl, model);
+  }
+  atualizar(model: Produto) {
+    return this.http.put<Produto>(this.baseUrl, model);
+  }
 }

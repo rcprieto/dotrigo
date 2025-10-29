@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.Json.Serialization;
 using API;
 using API.Domain.Auxiliar;
 using API.Domain.Auxiliares;
@@ -51,6 +52,10 @@ builder.Services.AddSingleton(cripto);
 
 #endregion
 
+builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
+{
+    options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
 
 var app = builder.Build();
 
@@ -61,6 +66,7 @@ app.UseCors(x =>
     .AllowAnyMethod()
     .AllowCredentials() //SignaIR precisa
     .WithOrigins(["https://localhost:4200",]));
+
 
 app.Use(async (context, next) =>
 {

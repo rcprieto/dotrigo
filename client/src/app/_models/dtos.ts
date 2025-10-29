@@ -1,3 +1,5 @@
+import { Produto } from './entidades';
+
 export interface BaseDto {
   id: number;
   nome: string;
@@ -37,4 +39,10 @@ export interface CriarPedidoDto {
 
 export interface ErrorDto {
   mensagem: string;
+}
+
+export interface ItemCarrinho {
+  id: string; // ID único do item no carrinho (pode ser produto.id + timestamp)
+  produto: Produto;
+  quantidade: number;
 }

@@ -86,7 +86,8 @@ namespace API.Domain.Entidades
 		/// <summary>
 		/// Data de cadastro do produto.
 		/// </summary>
-		public DateTime DataCadastro { get; set; } = new DateTime();
+		public DateTime? DataCadastro { get; set; }
+		public int? Estoque { get; set; } = 0;
 
 		// Propriedade de navegação para os itens de pedido (relação 1-N)
 		public ICollection<PedidoItem> PedidoItens { get; set; } = new List<PedidoItem>();

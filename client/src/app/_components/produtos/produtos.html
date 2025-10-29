@@ -1,5 +1,5 @@
 <!-- Container principal que simula a tela de um celular -->
-<div class="font-sans antialiased bg-gray-100 flex justify-center items-start min-h-screen p-4">
+<div class="font-sans antialiased bg-gray-100 flex justify-center items-start min-h-screen">
   <div class="w-full max-w-lg bg-white shadow-2xl rounded-2xl overflow-hidden" style="min-height: 80vh;">
 
     <!-- Cabeçalho Fixo -->
@@ -45,19 +45,17 @@
       <!-- Navegação de Categorias (Apenas na página do menu) -->
       @if (paginaAtual() === 'menu') {
       <nav class="bg-yellow-50 overflow-x-auto">
-        <ul class="flex space-x-2 px-4 py-2">
-          <li><button (click)="filtrarCategoria('todos')" [class.active]="categoriaAtiva() === 'todos'" class="nav-button">Todos</button></li>
-          <li><button (click)="filtrarCategoria('paes')" [class.active]="categoriaAtiva() === 'paes'" class="nav-button">Pães</button></li>
-          <li><button (click)="filtrarCategoria('pizzas')" [class.active]="categoriaAtiva() === 'pizzas'" class="nav-button">Pizzas</button></li>
-          <li><button (click)="filtrarCategoria('focaccias')" [class.active]="categoriaAtiva() === 'focaccias'" class="nav-button">Focaccias</button></li>
-          <li><button (click)="filtrarCategoria('outros')" [class.active]="categoriaAtiva() === 'outros'" class="nav-button">Outros</button></li>
+        <ul class="flex space-x-1 px-2 py-2 fontMenu">
+          @for (item of categorias(); track $index) {
+          <li><button (click)="filtrarCategoria(item.id)" [class.active]="categoriaAtiva() === item.id" class="nav-button">{{item.nome}}</button></li>
+          }
         </ul>
       </nav>
       }
     </header>
 
     <!-- Conteúdo Principal (Muda conforme a página) -->
-    <main class="p-4">
+    <main class="p-2 principal">
 
       <!-- PÁGINA: MENU (LISTA DE PRODUTOS) -->
       @if (paginaAtual() === 'menu') {
@@ -77,21 +75,19 @@
 
               <!-- Detalhes do Produto -->
               <div class="text-xs text-gray-500 mt-1 space-x-2">
-                <span><i class="fas fa-weight-hanging"></i> {{ produto.peso }}</span>
-                <span><i class="fas fa-box"></i> {{ produto.tamanho }}</span>
-                <span><i class="far fa-clock"></i> {{ produto.tempoPreparo }}</span>
+                <span><i class="fad fa-scale-balanced"></i> {{ produto.peso }}</span>
+                <span><i class="fad fa-ruler"></i> {{ produto.tamanho }}</span>
+                <span><i class="fad fa-clock-two"></i> {{ produto.tempoPreparo }}</span>
               </div>
             </div>
 
-            <!-- Ação de Adicionar (Layout modificado) -->
             <div class="mt-2">
               <!-- Preço na primeira linha -->
               <div>
                 <span class="text-lg font-bold text-green-700">{{ produto.preco | currency:'BRL' }}</span>
               </div>
-
               <!-- Controles na segunda linha, alinhados à direita -->
-              <div class="flex items-center space-x-2 mt-2 justify-end">
+              <div class="flex items-center space-x-2 mt-2 justify-start">
                 <!-- Input de Quantidade -->
                 <input #qtyInput type="number" value="1" min="1" max="10"
                        class="w-14 text-center border rounded-md py-1 px-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500">
@@ -283,11 +279,15 @@
             <input type="tel" id="telefone" name="telefone" [(ngModel)]="clienteTelefone"
                    class="form-input" placeholder="(XX) XXXXX-XXXX" required>
           </div>
-
+          <div>
+            <label for="clienteEndereco" class="form-label">Endereço</label>
+            <textarea id="clienteEndereco" name="clienteEndereco" [(ngModel)]="clienteEndereco" rows="3"
+                      class="form-input" placeholder="Endereço completo para entrega."></textarea>
+          </div>
           <div>
             <label for="comentarios" class="form-label">Comentários</label>
             <textarea id="comentarios" name="comentarios" [(ngModel)]="clienteComentarios" rows="3"
-                      class="form-input" placeholder="Alguma observação? (ex: sem cebola, ponto da carne)"></textarea>
+                      class="form-input" placeholder="Alguma observação? (ex: sem sal, sem açucar...)"></textarea>
           </div>
 
           <!-- Resumo do Pedido -->

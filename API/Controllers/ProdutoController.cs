@@ -38,32 +38,15 @@ namespace API.Controllers
         }
 
 
-
-
-        // [HttpGet("get-drop")]
-        // public async Task<ActionResult<List<DropdownDto>>> GetDrop()
-        // {
-        // 	var retorno = await _produtoRepository.GetDto();
-
-        // 	if (retorno.Any())
-        // 	{
-        // 		return Ok(retorno);
-        // 	}
-        // 	else
-        // 	{
-        // 		return BadRequest("Sem Usuários");
-        // 	}
-        // }
-
-
         [HttpPost]
         public async Task<ActionResult<Produto>> Add([FromBody] Produto model)
         {
             Geral.SanatizeClass(model);
             //var item = _mapper.Map<Area>(model);
+            model.DataCadastro = DateTime.Now;
 
             await _produtoRepository.AddAsync(model);
-            if (_produtoRepository.SaveChangesAsync().Result == 1)
+            if (_produtoRepository.SaveChangesAsync().Result == -1)
                 return BadRequest("Erro ao salvar");
 
             //model.Id = item.Id;
@@ -76,6 +59,7 @@ namespace API.Controllers
         public async Task<ActionResult<Produto>> Update(Produto model)
         {
             Geral.SanatizeClass(model);
+            model.DataCadastro = DateTime.Now;
             //var item = await _produtoRepository.GetByIdAsync(model.Id);
             //if (item == null) return NotFound();
 
