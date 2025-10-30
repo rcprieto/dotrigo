@@ -18,6 +18,7 @@ export interface Pedido {
   dataPedido: string;
   itens: PedidoItem[];
   clienteEndereco: string | null;
+  clienteEmail: string;
 }
 
 export interface PedidoItem {

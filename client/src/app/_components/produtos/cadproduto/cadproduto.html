@@ -1,3 +1,5 @@
+<!-- <img src="./assets/images/logodotrigo_pq.png"> -->
+
 <!-- Container principal que simula a tela de um celular -->
 <div class="font-sans antialiased bg-gray-100 flex justify-center items-start min-h-screen ">
 	<div class="w-full max-w-lg bg-white shadow-2xl rounded-2xl overflow-hidden" style="min-height: 80vh;">
@@ -64,7 +66,7 @@
 				</div>
 			</div>
 			<div class="row mt-3">
-				<div class="col">Foto URL: <input type="text" [(ngModel)]="itemCadastro().fotoUrl" class="form-control">
+				<div class="col">Arquivo Foto: <input type="file" (change)="onFileSelected($event)" class="form-control">
 				</div>
 			</div>
 			<div class="row mt-3">
@@ -86,6 +88,7 @@
 
 				<div class="col">Estoque: <input type="number" [(ngModel)]="itemCadastro().estoque" class="form-control"></div>
 			</div>
+
 
 			<div class="row mt-3">
 				<div class="col-6 justify-end flex">

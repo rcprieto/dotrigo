@@ -65,7 +65,7 @@ app.UseCors(x =>
     x.AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials() //SignaIR precisa
-    .WithOrigins(["https://localhost:4200",]));
+    .WithOrigins(["https://localhost:4200", "https://dotrigo.citapps.com.br"]));
 
 
 app.Use(async (context, next) =>

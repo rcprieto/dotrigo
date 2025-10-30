@@ -6,15 +6,23 @@
     <header class="sticky top-0 bg-white shadow-md z-10">
       <div class="container mx-auto px-4 py-3 flex justify-between items-center">
         <!-- Logo -->
-        <h1 class="text-3xl font-bold text-yellow-900" style="font-family: 'Merriweather', serif;">
-          dotrigo
-        </h1>
+        <div class="row">
+          <div class="col d-flex align-items-center" style="margin-left: -10px;">
+            <img src="./assets/images/logopq.png" style="height: 40px; ">
+            <h1 class="font-bold cor1" style="font-family: 'Merriweather', serif; font-size: 25px;">
+              dotrigo
+            </h1>
+          </div>
+        </div>
+
+
 
         <!-- Ícones de Navegação -->
         <div class="flex items-center space-x-4">
           <!-- Botão Pronta Entrega -->
+          <span style="font-size: 13px;" class="cor3">Pronta Entrega -></span>
           <button (click)="navegarPara('prontaEntrega')"
-                  class="relative text-yellow-800 hover:text-yellow-600 transition-colors"
+                  class="relative cor1 transition-colors"
                   title="Pronta Entrega">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.414-1.415L11 9.586V6z" clip-rule="evenodd" />
@@ -27,7 +35,7 @@
 
           <!-- Botão Carrinho -->
           <button (click)="navegarPara('carrinho')"
-                  class="relative text-yellow-800 hover:text-yellow-600 transition-colors"
+                  class="relative cor1 hover:cor2 transition-colors"
                   title="Carrinho">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -44,19 +52,20 @@
 
       <!-- Navegação de Categorias (Apenas na página do menu) -->
       @if (paginaAtual() === 'menu') {
-      <nav class="bg-yellow-50 overflow-x-auto">
+      <nav class="bgcor4 overflow-x-auto">
         <ul class="flex space-x-1 px-2 py-2 fontMenu">
           @for (item of categorias(); track $index) {
-          <li><button (click)="filtrarCategoria(item.id)" [class.active]="categoriaAtiva() === item.id" class="nav-button">{{item.nome}}</button></li>
+          <li><button (click)="filtrarCategoria(item.id)" [class.active]="categoriaAtiva() === item.id" class="nav-button ">{{item.nome}}</button></li>
           }
         </ul>
       </nav>
       }
     </header>
 
+
     <!-- Conteúdo Principal (Muda conforme a página) -->
     <main class="p-2 principal">
-
+      <p class="cor1 mb-1" style="font-size: 14px; font-weight: bold;">Pedidos sob encomenda, verifique os prazos de entrega.</p>
       <!-- PÁGINA: MENU (LISTA DE PRODUTOS) -->
       @if (paginaAtual() === 'menu') {
       <section class="space-y-4">
@@ -64,13 +73,13 @@
         <!-- Card do Produto -->
         <div class="flex bg-white rounded-lg shadow-md overflow-hidden transition-shadow hover:shadow-lg">
           <!-- Imagem -->
-          <img [src]="produto.fotoUrl" [alt]="produto.nome"
+          <img src="/assets/fotos/{{produto.fotoUrl}}" [alt]="produto.nome"
                class="w-28 h-28 object-cover flex-shrink-0"
-               onerror="this.src='https://placehold.co/112x112/f5e7c4/8c5a2b?text=dotrigo'">
+               onerror="this.src='https://placehold.co/112x112/E3DCCC/white?text=dotrigo'">
 
           <div class="p-3 flex flex-col justify-between w-full">
             <div>
-              <h3 class="text-lg font-semibold text-yellow-900">{{ produto.nome }}</h3>
+              <h3 class="text-lg font-semibold cor1">{{ produto.nome }}</h3>
               <p class="text-sm text-gray-600 truncate">{{ produto.descricao }}</p>
 
               <!-- Detalhes do Produto -->
@@ -84,16 +93,16 @@
             <div class="mt-2">
               <!-- Preço na primeira linha -->
               <div>
-                <span class="text-lg font-bold text-green-700">{{ produto.preco | currency:'BRL' }}</span>
+                <span class="text-lg font-bold cor1">{{ produto.preco | currency:'BRL' }}</span>
               </div>
               <!-- Controles na segunda linha, alinhados à direita -->
               <div class="flex items-center space-x-2 mt-2 justify-start">
                 <!-- Input de Quantidade -->
                 <input #qtyInput type="number" value="1" min="1" max="10"
-                       class="w-14 text-center border rounded-md py-1 px-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                       class="w-14 text-center border rounded-md py-1 px-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500">
                 <!-- Botão Adicionar -->
                 <button (click)="adicionarAoCarrinho(produto, qtyInput.valueAsNumber)"
-                        class="bg-yellow-800 text-white rounded-md px-3 py-1 text-sm font-medium hover:bg-yellow-700 transition-colors">
+                        class="bgcor1 text-white rounded-md px-3 py-1 text-sm font-medium  transition-colors">
                   Adicionar
                 </button>
               </div>
@@ -110,8 +119,8 @@
       @if (paginaAtual() === 'prontaEntrega') {
       <section>
         <div class="flex justify-between items-center mb-4">
-          <h2 class="text-2xl font-semibold text-yellow-900">Pronta Entrega</h2>
-          <button (click)="navegarPara('menu')" class="text-yellow-800 hover:underline">
+          <h2 class="text-2xl font-semibold text-green-900">Pronta Entrega</h2>
+          <button (click)="navegarPara('menu')" class="text-green-800 hover:underline">
             &larr; Voltar ao Menu
           </button>
         </div>
@@ -130,7 +139,7 @@
 
             <div class="p-3 flex flex-col justify-between w-full">
               <div>
-                <h3 class="text-lg font-semibold text-yellow-900">{{ produto.nome }}</h3>
+                <h3 class="text-lg font-semibold text-green-900">{{ produto.nome }}</h3>
                 <p class="text-sm text-gray-600 truncate">{{ produto.descricao }}</p>
                 <div class="text-xs text-gray-500 mt-1 space-x-2">
                   <span><i class="fas fa-weight-hanging"></i> {{ produto.peso }}</span>
@@ -148,9 +157,9 @@
                 <!-- Controles na segunda linha, alinhados à direita -->
                 <div class="flex items-center space-x-2 mt-2 justify-end">
                   <input #qtyProntaInput type="number" value="1" min="1" max="10"
-                         class="w-14 text-center border rounded-md py-1 px-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                         class="w-14 text-center border rounded-md py-1 px-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500">
                   <button (click)="adicionarAoCarrinho(produto, qtyProntaInput.valueAsNumber)"
-                          class="bg-yellow-800 text-white rounded-md px-3 py-1 text-sm font-medium hover:bg-yellow-700 transition-colors">
+                          class="bg-green-800 text-white rounded-md px-3 py-1 text-sm font-medium hover:bg-green-700 transition-colors">
                     Adicionar
                   </button>
                 </div>
@@ -168,8 +177,8 @@
       @if (paginaAtual() === 'carrinho') {
       <section>
         <div class="flex justify-between items-center mb-4">
-          <h2 class="text-2xl font-semibold text-yellow-900">Meu Carrinho</h2>
-          <button (click)="navegarPara('menu')" class="text-yellow-800 hover:underline">
+          <h2 class="text-2xl font-semibold cor1">Meu Carrinho</h2>
+          <button (click)="navegarPara('menu')" class="cor3 hover:underline">
             &larr; Continuar comprando
           </button>
         </div>
@@ -184,7 +193,7 @@
                  onerror="this.src='https://placehold.co/64x64/f5e7c4/8c5a2b?text=dotrigo'">
 
             <div class="ml-3 flex-grow">
-              <h4 class="font-medium text-yellow-900">{{ item.produto.nome }}</h4>
+              <h4 class="font-medium cor3">{{ item.produto.nome }}</h4>
               <span class="text-sm text-gray-600">{{ item.produto.preco | currency:'BRL' }} / un</span>
             </div>
 
@@ -199,7 +208,7 @@
 
             <!-- Preço Total do Item -->
             <div class="ml-3 text-right w-20">
-              <span class="font-bold text-gray-800">{{ (item.produto.preco * item.quantidade) | currency:'BRL' }}</span>
+              <span class="font-bold cor3">{{ (item.produto.preco * item.quantidade) | currency:'BRL' }}</span>
             </div>
 
             <!-- Botão Remover -->
@@ -213,21 +222,28 @@
 
           <!-- Sumário do Pedido -->
           <div class="border-t pt-4 mt-4">
-            <div class="flex justify-between items-center text-lg">
+            <!-- <div class="flex justify-between items-center text-lg">
               <span class="font-medium text-gray-700">Subtotal:</span>
-              <span class="font-bold text-yellow-900">{{ subtotalCarrinho() | currency:'BRL' }}</span>
-            </div>
+              <span class="font-bold cor1">{{ subtotalCarrinho() | currency:'BRL' }}</span>
+            </div> -->
             <div class="flex justify-between items-center text-lg mt-2">
               <span class="font-semibold text-gray-800">Total:</span>
-              <span class="font-bold text-2xl text-green-800">{{ totalCarrinho() | currency:'BRL' }}</span>
+              <span class="font-bold text-2xl cor3">{{ totalCarrinho() | currency:'BRL' }}</span>
             </div>
           </div>
 
+          <div class="flex justify-center items-center mb-4">
+            <button (click)="navegarPara('menu')" class="cor3 hover:underline">
+              &larr; Continuar comprando
+            </button>
+          </div>
           <!-- Botão Finalizar -->
           <button (click)="navegarPara('checkout')"
-                  class="w-full bg-green-700 text-white font-bold py-3 px-4 rounded-lg text-lg hover:bg-green-600 transition-colors shadow-lg">
+                  class="w-full bgcor1 text-white font-bold py-3 px-4 rounded-lg text-lg  transition-colors shadow-lg">
             Finalizar Pedido
           </button>
+
+
 
         </div>
         } @else {
@@ -247,8 +263,8 @@
       @if (paginaAtual() === 'checkout') {
       <section>
         <div class="flex justify-between items-center mb-4">
-          <h2 class="text-2xl font-semibold text-yellow-900">Checkout</h2>
-          <button (click)="navegarPara('carrinho')" class="text-yellow-800 hover:underline">
+          <h2 class="text-2xl font-semibold cor1">Checkout</h2>
+          <button (click)="navegarPara('carrinho')" class="cor3 hover:underline">
             &larr; Voltar ao Carrinho
           </button>
         </div>
@@ -280,6 +296,11 @@
                    class="form-input" placeholder="(XX) XXXXX-XXXX" required>
           </div>
           <div>
+            <label for="clienteEmail" class="form-label">Seu Email *</label>
+            <input type="clienteEmail" id="clienteEmail" name="clienteEmail" [(ngModel)]="clienteEmail"
+                   class="form-input">
+          </div>
+          <div>
             <label for="clienteEndereco" class="form-label">Endereço</label>
             <textarea id="clienteEndereco" name="clienteEndereco" [(ngModel)]="clienteEndereco" rows="3"
                       class="form-input" placeholder="Endereço completo para entrega."></textarea>
@@ -292,7 +313,7 @@
 
           <!-- Resumo do Pedido -->
           <div class="border-t pt-4 mt-4">
-            <h3 class="text-lg font-semibold text-yellow-900 mb-2">Resumo do Pedido</h3>
+            <h3 class="text-lg font-semibold cor1 mb-2">Resumo do Pedido</h3>
             @for (item of carrinho(); track item.id) {
             <div class="flex justify-between text-sm text-gray-700">
               <span>{{ item.quantidade }}x {{ item.produto.nome }}</span>
@@ -301,14 +322,14 @@
             }
             <div class="flex justify-between items-center text-xl font-bold mt-2 pt-2 border-t">
               <span class="text-gray-800">Total:</span>
-              <span class="text-green-800">{{ totalCarrinho() | currency:'BRL' }}</span>
+              <span class="cor3">{{ totalCarrinho() | currency:'BRL' }}</span>
             </div>
           </div>
 
           <!-- Botão de Envio -->
           <button type="submit"
                   [disabled]="statusPedido() === 'enviando'"
-                  class="w-full bg-green-700 text-white font-bold py-3 px-4 rounded-lg text-lg hover:bg-green-600 transition-colors shadow-lg disabled:bg-gray-400 disabled:cursor-not-allowed">
+                  class="w-full bgcor1 text-white font-bold py-3 px-4 rounded-lg text-lg hover:bg-green-600 transition-colors shadow-lg disabled:bg-gray-400 disabled:cursor-not-allowed">
             @if (statusPedido() === 'enviando') {
             <span>Enviando...</span>
             } @else {
@@ -325,15 +346,21 @@
         <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-green-500 mx-auto" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
         </svg>
-        <h2 class="text-3xl font-semibold text-yellow-900 mt-6 mb-2">Pedido Recebido!</h2>
+        <h2 class="text-3xl font-semibold text-green-900 mt-6 mb-2">Pedido Recebido!</h2>
         <p class="text-gray-600 text-lg mb-8">
-          Obrigado, {{ ultimoPedido().clienteNome }}! <br> Seu pedido já está em preparação.
+          Obrigado, {{ ultimoPedido().clienteNome }}! <br> Seu pedido irá para preparação assim que o pagamento for confirmado.
         </p>
         <p class="text-gray-500 mb-2">ID do Pedido:</p>
-        <p class="text-xl font-mono text-gray-800 mb-8">{{ ultimoPedido().id }}</p>
+        <p class="text-xl font-mono text-gray-800 mb-6">{{ ultimoPedido().id }}</p>
+        <p class="text-center flex justify-center text-gray-600 text-lg ">
+          Realize o pagamento via pix scanneando o QR CODE abaixo.
 
+        </p>
+        <p class="text-center flex justify-center text-gray-600 text-lg mb-8">
+          <img [src]="imagem">
+        </p>
         <button (click)="navegarPara('menu')"
-                class="w-full bg-yellow-800 text-white font-bold py-3 px-4 rounded-lg text-lg hover:bg-yellow-700 transition-colors">
+                class="w-full bg-green-800 text-white font-bold py-3 px-4 rounded-lg text-lg hover:bg-green-700 transition-colors">
           Fazer Novo Pedido
         </button>
       </section>

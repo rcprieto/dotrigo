@@ -46,3 +46,8 @@ export interface ItemCarrinho {
   produto: Produto;
   quantidade: number;
 }
+
+export interface SalvarArquivosDto {
+  arquivos: File[];
+  id: number;
+}

@@ -16,6 +16,7 @@ import { EnumeradorService } from '../../_services/enumerador.service';
 import { take } from 'rxjs';
 import { PedidoService } from '../../_services/pedido.service';
 import { ToastrService } from 'ngx-toastr';
+import { QrCodePix } from 'qrcode-pix';
 
 type Pagina = 'menu' | 'carrinho' | 'checkout' | 'prontaEntrega' | 'confirmacao';
 type StatusPedido = 'idle' | 'enviando' | 'sucesso' | 'erro';
@@ -51,6 +52,7 @@ export class Produtos implements OnInit {
   clienteTelefone: WritableSignal<string> = signal('');
   clienteComentarios: WritableSignal<string> = signal('');
   clienteEndereco: WritableSignal<string> = signal('');
+  clienteEmail: WritableSignal<string> = signal('');
 
   // Status do Envio do Pedido
   statusPedido: WritableSignal<StatusPedido> = signal('idle');
@@ -59,7 +61,20 @@ export class Produtos implements OnInit {
     clienteNome: '',
   });
 
-  ngOnInit(): void {
+  qrCodePix = QrCodePix({
+    version: '01',
+    key: '0e1e80a5-f2b0-4709-b123-7bf87d2f714d',
+    name: 'Rodrigo Prieto',
+    city: 'SAO PAULO',
+    transactionId: 'DOTRIGO1', //max 25 characters
+    message: 'Pagamento dotrigo pedito 1',
+    cep: '05351015',
+    value: 0,
+  });
+
+  imagem: string = '';
+
+  async ngOnInit(): Promise<void> {
     this.service.listarProdutos().subscribe({
       next: (produtos) => {
         this.produtos.set(produtos);
@@ -74,6 +89,8 @@ export class Produtos implements OnInit {
           this.categorias.set(enumeradores.filter((e) => e.referenciaId === 2));
         },
       });
+
+    this.carregarDadosComprador();
   }
 
   // Efeito para salvar o carrinho no localStorage sempre que ele mudar
@@ -143,6 +160,23 @@ export class Produtos implements OnInit {
       console.error('Não foi possível carregar o carrinho do localStorage.', e);
       return [];
     }
+  }
+
+  // Carrega o carrinho do localStorage ao iniciar
+  carregarDadosComprador() {
+    if (localStorage.getItem('dotrigo_comprador')) {
+      try {
+        const item = localStorage.getItem('dotrigo_comprador');
+        const pedido = JSON.parse(item!);
+        this.clienteNome.set(pedido.clienteNome);
+        this.clienteTelefone.set(pedido.clienteTelefone);
+        this.clienteEndereco.set(pedido.clienteEndereco);
+        this.clienteEmail.set(pedido.clienteEmail);
+      } catch (e) {
+        console.error('Não foi possível carregar o carrinho do localStorage.', e);
+      }
+    }
+    return true;
   }
 
   // Adiciona um produto ao carrinho
@@ -223,6 +257,7 @@ export class Produtos implements OnInit {
       clienteNome: this.clienteNome(),
       clienteTelefone: this.clienteTelefone(),
       comentarios: this.clienteComentarios(),
+      clienteEmail: this.clienteEmail(),
       valorTotal: this.totalCarrinho(),
       itens: this.carrinho().map((item) => item),
       statusId: null,
@@ -232,7 +267,11 @@ export class Produtos implements OnInit {
       clienteEndereco: this.clienteEndereco(),
     };
 
-    console.log('Enviando pedido para o backend:', pedidoParaEnviar);
+    try {
+      localStorage.setItem('dotrigo_comprador', JSON.stringify(pedidoParaEnviar));
+    } catch (e) {
+      console.error('Não foi possível salvar os dados no localStorage.', e);
+    }
 
     // 2. Simular a chamada da API (HttpClient.post)
     // No app real:
@@ -240,7 +279,19 @@ export class Produtos implements OnInit {
       .criarPedido(pedidoParaEnviar)
       .pipe(take(1))
       .subscribe({
-        next: (resp) => {
+        next: async (resp) => {
+          this.qrCodePix = QrCodePix({
+            version: '01',
+            key: '0e1e80a5-f2b0-4709-b123-7bf87d2f714d',
+            name: 'Rodrigo Prieto',
+            city: 'SAO PAULO',
+            transactionId: 'DOTRIGO' + resp.id.toString(), //max 25 characters
+            message: 'Pagamento dotrigo pedido número: ' + resp.id.toString(),
+            cep: '05351015',
+            value: resp.valorTotal,
+          });
+          this.imagem = await this.qrCodePix.base64();
+
           setTimeout(() => {
             this.statusPedido.set('sucesso');
             this.ultimoPedido.set({

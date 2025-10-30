@@ -44,6 +44,8 @@ export class Cadproduto implements OnInit {
     estoque: 0,
   });
 
+  selectedFiles: File[] | null = null;
+
   ngOnInit(): void {
     this.enumeradorService
       .listar()
@@ -82,6 +84,7 @@ export class Cadproduto implements OnInit {
   }
   salvar() {
     this.itemCadastro().dataCadastro = '';
+
     if (this.itemCadastro().id > 0) {
       this.service
         .atualizar(this.itemCadastro())
@@ -89,6 +92,7 @@ export class Cadproduto implements OnInit {
         .subscribe({
           next: (resp) => {
             //this.itemCadastro.set(resp);
+            this.service.inserirAnexo(this.selectedFiles!, resp.id);
             this.toast.success('Cadastro Realizado com Sucesso');
             this.cancelar();
             this.carregarProdutos();
@@ -101,6 +105,7 @@ export class Cadproduto implements OnInit {
         .subscribe({
           next: (resp) => {
             //this.itemCadastro.set(resp);
+            this.service.inserirAnexo(this.selectedFiles!, resp.id);
             this.toast.success('Cadastro Realizado com Sucesso');
             this.cancelar();
             this.carregarProdutos();
@@ -127,5 +132,14 @@ export class Cadproduto implements OnInit {
       pedidoItens: [],
       estoque: null,
     });
+  }
+
+  onFileSelected(event: any): void {
+    const files: FileList = event.target.files;
+    this.selectedFiles = [];
+
+    for (let i = 0; i < files.length; i++) {
+      this.selectedFiles.push(files[i]);
+    }
   }
 }
